@@ -10,7 +10,7 @@ df = pd.read_csv(file_path, header=None)
 # Step 2: Dataset Schema and Storage
 # Define the dataset schema
 schema = {
-    "Variable Name": [
+    "Features": [
         "Sex", "Length", "Diameter", "Height", "Whole_weight",
         "Shucked_weight", "Viscera_weight", "Shell_weight", "Rings"
     ],
@@ -37,15 +37,17 @@ schema = {
         "", "mm", "mm", "mm", "grams",
         "grams", "grams", "grams", ""
     ],
-    "Missing Values": ["no", "no", "no", "no", "no", "no", "no", "no", "no"]
+    "Null": ["no", "no", "no", "no", "no", "no", "no", "no", "no"]
 }
 schema_df = pd.DataFrame(schema)
 print("Dataset Schema:")
 print(schema_df)
+print(schema_df.columns)
+
 
 # Save the schema to a Parquet file
 schema_df.to_parquet("abalone_dataset_schema.parquet", index=False)
-
+df.columns=schema["Features"]
 # Save the full dataset as Parquet
 df.to_parquet("abalone_full_dataset.parquet", index=False)
 
@@ -59,9 +61,9 @@ train, temp = train_test_split(df, test_size=0.4, random_state=42)  # 60% train,
 test, production = train_test_split(temp, test_size=0.5, random_state=42)  # Split test and production equally
 
 # Save splits as Parquet
-os.makedirs("../../../Desktop/Term 2/CT1/Assignment/Archive/abalone_splits", exist_ok=True)
-train.to_parquet("abalone_splits/train.parquet", index=False)
-test.to_parquet("abalone_splits/test.parquet", index=False)
-production.to_parquet("abalone_splits/production.parquet", index=False)
+os.makedirs("datasets", exist_ok=True)
+train.to_parquet("datasets/train.parquet", index=False)
+test.to_parquet("datasets/test.parquet", index=False)
+production.to_parquet("datasets/production.parquet", index=False)
 
 print("Abalone data processing completed successfully.")
